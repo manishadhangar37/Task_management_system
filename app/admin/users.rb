@@ -36,9 +36,9 @@ ActiveAdmin.register User do
     selectable_column
     id_column
     column :email
-    column :created_at
     column :name
     column :role
+    column :created_at
     actions
   end
 
