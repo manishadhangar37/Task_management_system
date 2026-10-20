@@ -1,0 +1,20 @@
+<h1>You have a new task</h1>
+
+<p>A task has been assigned to you.</p>
+
+<dl>
+  <dt>Task:</dt>
+  <dd><%= @task.title %></dd>
+
+  <dt>Description:</dt>
+  <dd><%= @task.description %></dd>
+
+  <dt>Due: date</dt>
+  <dd><%= l(@task.due_date, format: :long) %></dd>
+
+  <dt>Priority:</dt>
+  <dd><%= @task.priority.humanize %></dd>
+
+  <dt>Reporter:</dt>
+  <dd><%= @task.reporter %></dd>
+</dl>
