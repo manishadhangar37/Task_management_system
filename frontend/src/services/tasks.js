@@ -61,3 +61,52 @@ export async function createTask(task) {
 
   return result
 }
+
+export async function getTasks() {
+  const response = await fetch('/api/tasks', {
+    credentials: 'include',
+    headers: { Accept: 'application/json' },
+  })
+  const result = await responseJson(response)
+
+  if (!response.ok) {
+    throw new Error(result.errors?.join(', ') || 'Unable to load your tasks. Please try again.')
+  }
+
+  return result
+}
+
+export async function getTask(id) {
+  const response = await fetch(`/api/tasks/${id}`, {
+    credentials: 'include',
+    headers: { Accept: 'application/json' },
+  })
+  const result = await responseJson(response)
+
+  if (!response.ok) {
+    throw new Error(result.errors?.join(', ') || 'Unable to load this task.')
+  }
+
+  return result
+}
+
+export async function updateTaskStatus(id, status) {
+  const csrfToken = await getCsrfToken()
+  const response = await fetch(`/api/tasks/${id}`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'X-CSRF-Token': csrfToken,
+    },
+    body: JSON.stringify({ task: { status } }),
+  })
+  const result = await responseJson(response)
+
+  if (!response.ok) {
+    throw new Error(result.errors?.join(', ') || 'Unable to update task status.')
+  }
+
+  return result
+}

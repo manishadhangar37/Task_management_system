@@ -149,6 +149,12 @@
   background: #fff;
 }
 
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -166,20 +172,36 @@
   color: #c8cad4;
 }
 
-.help-button {
-  width: 30px;
-  height: 30px;
+.help-button,
+.logout-button {
+  height: 36px;
   border: 1px solid #e7e8ef;
-  border-radius: 50%;
+  border-radius: 999px;
   background: #fff;
   color: #85889a;
   font-weight: 600;
   cursor: pointer;
 }
 
+.help-button {
+  width: 36px;
+}
+
+.logout-button {
+  padding: 0 14px;
+  border-color: #ddd8ff;
+  background: #f4f1ff;
+  color: #4b45c4;
+}
+
 .help-button:hover {
   border-color: #c9c5f6;
   color: #5e54da;
+}
+
+.logout-button:hover {
+  border-color: #c5bcff;
+  background: #efeaff;
 }
 
 .content-wrap {

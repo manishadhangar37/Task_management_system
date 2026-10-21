@@ -1,37 +1,51 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
+
   def index
-    @tasks = Task.all
+    @tasks = current_user.tasks.order(due_date: :asc)
+ 
+    respond_to do |format|
+      format.html
+      format.json { render json: @tasks }
+      
+    end
   end
-  
-  
+
   def create
     @task = current_user.tasks.new(task_params)
     @task.reporter = current_user.email
+
     if @task.save
       TaskMailer.task_created(@task).deliver_later
       render json: @task, status: :created
     else
-      render json: { errors: @task.errors.full_messages },
-      status: :unprocessable_entity
+      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
     end
   end
-  
+
+  def show
+    @task = current_user.tasks.find(params[:id])
+    render json: @task
+  end
+
   def update
-    
-    @task = Task.find(params[:id])
-    
-    if @task.update(params)
-      
+    @task = current_user.tasks.find(params[:id])
+    status = params.require(:task).permit(:status)[:status]
+
+    unless Task.statuses.key?(status)
+      return render json: { errors: ['Please choose a valid task status.'] }, status: :unprocessable_entity
+    end
+
+    if @task.update(status: status)
       render json: @task, status: :ok
     else
-      render json: {errors: @task.errors.full_messages}, status: :unprocessable_entity
+      render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
     end
   end
-  
-  private 
+
+  private
+
   def task_params
-    params.require(:task).permit(:title,:description,:Assignee,:reporter,:status,:due_date,:priority)
+    params.require(:task).permit(:title, :description, :Assignee, :reporter, :status, :due_date, :priority)
   end
-  
 end

@@ -5,7 +5,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
   :recoverable, :rememberable, :validatable
   validates :password,format: { with: /\A(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}\z/,
-            message: "must include uppercase, lowercase, number, and special character, and be at least 8 characters"}
+            message: "must include uppercase, lowercase, number, and special character, and be at least 8 characters"}, if: -> { password.present? }
 
 
   enum :role,{

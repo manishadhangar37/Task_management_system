@@ -22,7 +22,7 @@ export default function SignInPage() {
 
     try {
       await signIn(credentials)
-      navigate('/tasks/new', { replace: true })
+      navigate('/users_dashboard', { replace: true })
     } catch (submitError) {
       setError(submitError.message)
     } finally {

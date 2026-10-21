@@ -75,13 +75,7 @@ export default function TaskForm() {
           </div>
         </label>
 
-        <label className="field">
-          <span>Reporter <b>*</b></span>
-          <div className="input-with-icon">
-            <span className="input-icon">◉</span>
-            <input name="reporter" value={task.reporter} onChange={updateTask} placeholder="Who’s requesting this?" required />
-          </div>
-        </label>
+      
 
         <label className="field">
           <span>Status <b>*</b></span>
