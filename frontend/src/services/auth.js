@@ -1,7 +1,7 @@
 export async function getAuthCsrfToken() {
   const pageToken = document.querySelector('meta[name="csrf-token"]')?.content
   if (pageToken) return pageToken
-
+  
   const response = await fetch('/api/users/sign_in', {
     credentials: 'include',
     headers: { Accept: 'text/html' },
@@ -9,14 +9,16 @@ export async function getAuthCsrfToken() {
   const html = await response.text()
   const documentFragment = new DOMParser().parseFromString(html, 'text/html')
   const token = documentFragment.querySelector('meta[name="csrf-token"]')?.content
-    || documentFragment.querySelector('input[name="authenticity_token"]')?.value
-
+  || documentFragment.querySelector('input[name="authenticity_token"]')?.value
+  
   if (!token) {
     throw new Error('Could not load the secure sign-in form. Check that Rails is running and try again.')
   }
-
+  
   return token
 }
+
+
 
 export async function signIn({ email, password, remember }) {
   const csrfToken = await getAuthCsrfToken()
@@ -26,7 +28,7 @@ export async function signIn({ email, password, remember }) {
     'user[remember_me]': remember ? '1' : '0',
     authenticity_token: csrfToken,
   })
-
+  
   const response = await fetch('/api/users/sign_in', {
     method: 'POST',
     credentials: 'include',
@@ -36,18 +38,32 @@ export async function signIn({ email, password, remember }) {
     },
     body: formData,
   })
-
+  
   if (response.redirected && !new URL(response.url).pathname.endsWith('/users/sign_in')) {
     return
   }
-
+  
   if (response.status === 422 || response.redirected) {
     throw new Error('We couldn’t sign you in. Check your email and password, then try again.')
   }
-
+  
   if (!response.ok) {
     throw new Error(`Sign-in failed (HTTP ${response.status}). Please try again.`)
   }
-
+  
   throw new Error('We couldn’t sign you in. Check your email and password, then try again.')
 }
+
+export async function signOut() {
+  const csrfToken = await getAuthCsrfToken()
+  const response = await fetch('/api/users/sign_out', {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: { 'X-CSRF-Token': csrfToken, Accept: 'text/html' },
+  })
+  
+  if (!response.ok && !response.redirected) {
+    throw new Error(`Sign-out failed (HTTP ${response.status}).`)
+  }
+}
+

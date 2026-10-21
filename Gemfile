@@ -27,6 +27,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'shoulda-matchers'
   gem 'dotenv-rails'
+  gem 'rack-cors'
 end
 
 

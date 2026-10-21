@@ -21,4 +21,12 @@ class Task < ApplicationRecord
     medium: 1,
     low: 2
   }
+
+  def self.ransackable_attributes(auth_object = nil)
+  %w[id title description Assignee reporter status due_date user_id priority ]
+end
+
+ def self.ransackable_associations(auth_object = nil)
+    []
+  end
 end

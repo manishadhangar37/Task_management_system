@@ -1,16 +1,33 @@
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { signOut } from '../services/auth'
 
 export default function AppLayout() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const pageLabel = location.pathname === '/users_dashboard'
+    ? 'My tasks'
+    : location.pathname === '/tasks/new'
+      ? 'New task'
+      : 'Task details'
+
+  async function handleLogout() {
+    try {
+      await signOut()
+    } finally {
+      navigate('/users/sign_in', { replace: true })
+    }
+  }
+
   return (
     <main className="app-shell">
       <aside className="sidebar">
-        <Link className="brand" to="/" aria-label="Taskflow home">
+        <Link className="brand" to="/users_dashboard" aria-label="Taskflow home">
           <span className="brand-mark">T</span>
           <span>taskflow</span>
         </Link>
         <div className="workspace-label">WORKSPACE</div>
         <nav className="navigation" aria-label="Main navigation">
-          <NavLink to="/tasks" end><span className="nav-icon">▦</span> All tasks</NavLink>
+          <NavLink to="/users_dashboard"><span className="nav-icon">▦</span> My tasks</NavLink>
           <NavLink to="/tasks/new"><span className="nav-icon">＋</span> Create task</NavLink>
         </nav>
         <div className="sidebar-bottom">
@@ -22,8 +39,11 @@ export default function AppLayout() {
 
       <section className="main-area">
         <header className="topbar">
-          <div className="breadcrumb"><span>Tasks</span><span className="slash">/</span><strong>New task</strong></div>
-          <button className="help-button" type="button" aria-label="Help">?</button>
+          <div className="breadcrumb"><span>Tasks</span><span className="slash">/</span><strong>{pageLabel}</strong></div>
+          <div className="topbar-actions">
+            <button className="help-button" type="button" aria-label="Help">?</button>
+            <button className="logout-button" type="button" onClick={handleLogout}>Log out</button>
+          </div>
         </header>
         <Outlet />
       </section>
