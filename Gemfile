@@ -21,13 +21,14 @@ gem "devise"
 gem "activeadmin"
 gem "pundit"
 gem "dartsass-rails"
+gem "whenever"
 
 group :development, :test do
-  gem 'rspec-rails'
-  gem 'factory_bot_rails'
-  gem 'shoulda-matchers'
-  gem 'dotenv-rails'
-  gem 'rack-cors'
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+  gem "shoulda-matchers"
+  gem "dotenv-rails"
+  gem "rack-cors"
 end
 
 

@@ -7,16 +7,16 @@ class Task < ApplicationRecord
   validates :status, presence: true
   validates :due_date, presence: true
   validates :priority, presence: true
- 
 
-  enum :status,{
+
+  enum :status, {
     todo: 0,
     inProgress: 1,
     inReview: 2,
     done: 3
   }
 
-  enum :priority,{
+  enum :priority, {
     high: 0,
     medium: 1,
     low: 2

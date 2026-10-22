@@ -186,23 +186,27 @@
 
 .dashboard-task-list {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  align-items: stretch;
+   
 }
 
 .dashboard-task-card {
   display: flex;
+  margin: 4px;
   min-width: 0;
   align-items: flex-start;
   justify-content: space-between;
   gap: 20px;
   padding: 20px 22px;
-  border: 2px solid rgba(86, 86, 179, 0.356);
-  border-bottom: 1px solid #f1f1f5;
+  border: 2px solid rgba(42, 42, 175, 0.747);
+  
   transition: background-color 150ms ease;
 }
 
-.dashboard-task-card:last-child {
-  border-bottom: 0;
-}
+
 
 .dashboard-task-card:hover {
   background: #fcfcff;
@@ -216,7 +220,7 @@
 .task-card-title-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
 }
 
 .task-card-title-row h3 {
@@ -390,7 +394,7 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
   .dashboard-wrap {
     width: calc(100% - 30px);
     margin-top: 28px;

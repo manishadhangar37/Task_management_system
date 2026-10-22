@@ -40,7 +40,6 @@ function TaskCard({ task }) {
           <h3>{task.title}</h3>
           <span className={`task-status status-${status}`}>{statusLabels[status] || status}</span>
         </div>
-        <p className="dashboard-task-description">{task.description || 'No description provided.'}</p>
         <div className="task-card-meta">
           <span><span className="meta-symbol">◎</span> {task.Assignee || 'Unassigned'}</span>
           <span className={isOverdue(task) ? 'due-date overdue' : 'due-date'}>

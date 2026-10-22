@@ -1,9 +1,11 @@
 
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { getAuthCsrfToken } from "../services/auth";
 
 export default function SignUp() {
+  const navigate = useNavigate()
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -25,6 +27,7 @@ export default function SignUp() {
       await axios.post("/api/users", { user: form }, {
         headers: { "X-CSRF-Token": csrfToken },
       });
+      
       setMessage("Account created successfully!");
     } catch (error) {
       setMessage(

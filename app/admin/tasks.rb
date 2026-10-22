@@ -1,6 +1,10 @@
 ActiveAdmin.register Task do
-  permit_params :title, :description, :Assignee, :reporter,:status, :due_date, :priority
-  
+   permit_params :title, :description, :Assignee, :reporter,
+                :status, :due_date, :priority
+  actions :all
+
+
+
   index do
     selectable_column
     id_column
@@ -13,27 +17,28 @@ ActiveAdmin.register Task do
     column :reporter
     actions
   end
-  
-  show do 
+
+  show do
     attributes_table do
       row :title
       row :description
       row :due_date
       row :status
       row :Assignee
-      row :Reporter
+      row :reporter
       row :priority
     end
   end
-  
+
   form do |f|
-    permit_params :title, :description, :Assignee, :reporter,:status, :due_date, :priority
     f.inputs "Edit User Role" do
       f.input :title
       f.input :description
-      f.input :due_date 
+      f.input :due_date
       f.input :status
       f.input :priority
+      f.input :Assignee
+      f.input :reporter
     end
     f.actions
   end

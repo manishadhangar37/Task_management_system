@@ -2,12 +2,11 @@ class TasksController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @tasks = current_user.tasks.order(due_date: :asc)
- 
+    @tasks = policy_scope(Task).order(due_date: :asc)
+
     respond_to do |format|
       format.html
       format.json { render json: @tasks }
-      
     end
   end
 
@@ -15,6 +14,7 @@ class TasksController < ApplicationController
     @task = current_user.tasks.new(task_params)
     @task.reporter = current_user.email
 
+    authorize @task
     if @task.save
       TaskMailer.task_created(@task).deliver_later
       render json: @task, status: :created
@@ -24,16 +24,18 @@ class TasksController < ApplicationController
   end
 
   def show
-    @task = current_user.tasks.find(params[:id])
+    @task = policy_scope(Task).find(params[:id])
+    authorize @task
     render json: @task
   end
 
   def update
-    @task = current_user.tasks.find(params[:id])
+    @task = policy_scope(Task).find(params[:id])
+    authorize @task
     status = params.require(:task).permit(:status)[:status]
 
     unless Task.statuses.key?(status)
-      return render json: { errors: ['Please choose a valid task status.'] }, status: :unprocessable_entity
+      return render json: { errors: [ "Please choose a valid task status." ] }, status: :unprocessable_entity
     end
 
     if @task.update(status: status)
