@@ -31,7 +31,7 @@ ActiveAdmin.register Task do
   end
 
   form do |f|
-    f.inputs "Edit User Role" do
+    f.inputs "Edit Task" do
       f.input :title
       f.input :description
       f.input :due_date

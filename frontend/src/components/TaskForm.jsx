@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { createTask } from '../services/tasks'
 
 const emptyTask = {
@@ -12,6 +13,7 @@ const emptyTask = {
 }
 
 export default function TaskForm() {
+  const navigate = useNavigate()
   const [task, setTask] = useState(emptyTask)
   const [errors, setErrors] = useState([])
   const [feedback, setFeedback] = useState('')
@@ -31,6 +33,7 @@ export default function TaskForm() {
       await createTask(task)
       setTask(emptyTask)
       setFeedback('Task created successfully.')
+      navigate("/users_dashboard")
     } catch (error) {
       setErrors([error.message])
     } finally {

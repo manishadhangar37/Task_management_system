@@ -91,7 +91,7 @@ export async function getTask(id) {
   return result
 }
 
-export async function updateTaskStatus(id, status) {
+export async function updateTask(id, payload) {
   const csrfToken = await getCsrfToken()
   const response = await fetch(`/api/tasks/${id}`, {
     method: 'PATCH',
@@ -101,13 +101,17 @@ export async function updateTaskStatus(id, status) {
       Accept: 'application/json',
       'X-CSRF-Token': csrfToken,
     },
-    body: JSON.stringify({ task: { status } }),
+    body: JSON.stringify({ task: payload }),
   })
   const result = await responseJson(response)
 
   if (!response.ok) {
-    throw new Error(result.errors?.join(', ') || 'Unable to update task status.')
+    throw new Error(result.errors?.join(', ') || 'Unable to update task.')
   }
 
   return result
+}
+
+export async function updateTaskStatus(id, status) {
+  return updateTask(id, { status })
 }
