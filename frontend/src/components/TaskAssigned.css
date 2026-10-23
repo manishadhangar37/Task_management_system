@@ -1,0 +1,152 @@
+
+.assigned-tasks {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 40px;
+  min-height: 100vh;
+  background: #f7f8f9;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #172b4d;
+}
+
+/* Page heading */
+.assigned-tasks h2 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  margin: 0 0 24px;
+  color: #172b4d;
+}
+
+/* Task card */
+.task-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #dfe1e6;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 2px rgba(9, 30, 66, 0.08);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.task-card:hover {
+  border-color: #b3d4ff;
+  box-shadow: 0 3px 8px rgba(9, 30, 66, 0.12);
+}
+
+/* Task title */
+.task-card h3 {
+  margin: 0 0 12px;
+  color: #0c66e4;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* Task description */
+.task-card > p {
+  margin: 9px 0;
+  color: #44546f;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+/* Field labels */
+.task-card p strong {
+  display: inline-block;
+  min-width: 100px;
+  color: #626f86;
+  font-weight: 500;
+}
+
+/* Status */
+.task-card p:nth-of-type(4) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.task-card p:nth-of-type(4)::first-letter {
+  color: inherit;
+}
+
+/* View task button */
+.task-card button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+  padding: 8px 16px;
+  background: #0c66e4;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.task-card button:hover {
+  background: #0052cc;
+}
+
+.task-card button:focus-visible {
+  outline: 2px solid #85b8ff;
+  outline-offset: 2px;
+}
+
+/* Loading, error and empty states */
+.assigned-tasks > p {
+  background: #ffffff;
+  border: 1px solid #dfe1e6;
+  border-radius: 6px;
+  padding: 18px 20px;
+  color: #44546f;
+  font-size: 14px;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .assigned-tasks {
+    padding: 24px 18px;
+  }
+
+  .assigned-tasks h2 {
+    font-size: 22px;
+  }
+
+  .task-card {
+    padding: 18px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .assigned-tasks {
+    padding: 16px 12px;
+  }
+
+  .task-card {
+    padding: 16px;
+  }
+
+  .task-card h3 {
+    font-size: 16px;
+  }
+
+  .task-card p strong {
+    min-width: 85px;
+  }
+
+  .task-card button {
+    width: 100%;
+  }
+}

@@ -11,6 +11,13 @@ const statusLabels = {
   done: 'Done',
 }
 
+const boardColumns = [
+  { key: 'todo', label: 'To Do' },
+  { key: 'inProgress', label: 'In Progress' },
+  { key: 'inReview', label: 'In Review' },
+  { key: 'done', label: 'Done' },
+]
+
 function formatDate(value) {
   if (!value) return 'No due date'
   const datePart = value.slice(0, 10)
@@ -34,27 +41,46 @@ function TaskCard({ task }) {
   const priority = (task.priority || 'medium').toLowerCase()
 
   return (
-    <article className="dashboard-task-card">
-      <div className="task-card-main">
-        <div className="task-card-title-row">
-          <h3>{task.title}</h3>
-          <span className={`task-status status-${status}`}>{statusLabels[status] || status}</span>
-        </div>
-        <div className="task-card-meta">
-          <span><span className="meta-symbol">◎</span> {task.Assignee || 'Unassigned'}</span>
-          <span className={isOverdue(task) ? 'due-date overdue' : 'due-date'}>
-            <span className="meta-symbol">◷</span> {isOverdue(task) ? 'Overdue · ' : ''}{formatDate(task.due_date)}
-          </span>
-        </div>
+    <article className="jira-card">
+      <div className="jira-card-header">
+        <span className={`jira-priority dot-${priority}`} aria-label={`${priority} priority`} />
+        <span className={`jira-badge badge-${status}`}>{statusLabels[status] || status}</span>
       </div>
-      <div className={`task-priority priority-${priority}`}>
-        <span /> {priority.charAt(0).toUpperCase() + priority.slice(1)} priority
+
+      <h3 className="jira-card-title">{task.title}</h3>
+
+
+      <div className="jira-card-meta">
+       
+<div className="jira-card-meta">
+  <span className="assignee-info">
+    <strong>Assignee:</strong>
+
+    {task.Assignee ? (
+      <span className="assignee-avatar-wrapper">
+        <span className="assignee-avatar">
+          {task.Assignee.split('@')[0].slice(0, 2).toUpperCase()}
+        </span>
+
+        <span className="assignee-email">
+          {task.Assignee}
+        </span>
+      </span>
+    ) : (
+      'Unassigned'
+    )}
+  </span>
+</div>
+
+
+      <span className={isOverdue(task) ? 'overdue' : ''}>
+          <strong>Due:</strong> {isOverdue(task) ? 'Overdue · ' : ''}{formatDate(task.due_date)}
+        </span>
       </div>
-       <div>
-        <button onClick={() => navigate(`/tasks/${task.id}`)}>
-        View Task
+
+     <button type="button" className="jira-view-button" onClick={() => navigate(`/tasks/${task.id}`)}>
+        View task
       </button>
-    </div>
     </article>
   )
 }
@@ -62,7 +88,6 @@ function TaskCard({ task }) {
 export default function UserDashboard() {
   const [tasks, setTasks] = useState([])
   const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState('all')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -87,18 +112,26 @@ export default function UserDashboard() {
     total: tasks.length,
     todo: tasks.filter((task) => task.status === 'todo').length,
     inProgress: tasks.filter((task) => task.status === 'inProgress').length,
+    inReview: tasks.filter((task) => task.status === 'inReview').length,
     done: tasks.filter((task) => task.status === 'done').length,
   }), [tasks])
 
-  const visibleTasks = useMemo(() => {
+  const filteredTasks = useMemo(() => {
     const query = search.trim().toLowerCase()
     return tasks.filter((task) => {
-      const matchesStatus = statusFilter === 'all' || task.status === statusFilter
-      const matchesSearch = !query || [task.title, task.description, task.Assignee]
+      if (!query) return true
+      return [task.title, task.description, task.Assignee]
         .some((value) => value?.toLowerCase().includes(query))
-      return matchesStatus && matchesSearch
     })
-  }, [tasks, search, statusFilter])
+  }, [tasks, search])
+
+  const columns = useMemo(
+    () => boardColumns.map((column) => ({
+      ...column,
+      tasks: filteredTasks.filter((task) => (task.status || 'todo') === column.key),
+    })),
+    [filteredTasks],
+  )
 
   return (
     <div className="dashboard-wrap">
@@ -124,31 +157,27 @@ export default function UserDashboard() {
           <span className="summary-icon">◷</span>
           <div><span className="summary-label">In progress</span><strong>{loading ? '—' : counts.inProgress}</strong></div>
         </article>
+        <article className="summary-card summary-review">
+          <span className="summary-icon">◎</span>
+          <div><span className="summary-label">In review</span><strong>{loading ? '—' : counts.inReview}</strong></div>
+        </article>
         <article className="summary-card summary-done">
           <span className="summary-icon">✓</span>
-          <div><span className="summary-label">Completed</span><strong>{loading ? '—' : counts.done}</strong></div>
+          <div><span className="summary-label">Done</span><strong>{loading ? '—' : counts.done}</strong></div>
         </article>
       </section>
 
       <section className="dashboard-list-section" aria-labelledby="task-list-title">
         <div className="dashboard-list-heading">
           <div>
-            <h2 id="task-list-title">Your work</h2>
-            <p>{loading ? 'Loading your tasks…' : `${visibleTasks.length} ${visibleTasks.length === 1 ? 'task' : 'tasks'}`}</p>
+            <h2 id="task-list-title">Board</h2>
+            <p>{loading ? 'Loading your tasks…' : `${filteredTasks.length} ${filteredTasks.length === 1 ? 'task' : 'tasks'}`}</p>
           </div>
-          <div className="task-filters">
-            <label className="task-search">
-              <span aria-hidden="true">⌕</span>
-              <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tasks" aria-label="Search tasks" />
-            </label>
-            <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} aria-label="Filter tasks by status">
-              <option value="all">All statuses</option>
-              <option value="todo">To do</option>
-              <option value="inProgress">In progress</option>
-              <option value="inReview">In review</option>
-              <option value="done">Done</option>
-            </select>
-          </div>
+
+          <label className="task-search">
+            <span aria-hidden="true">⌕</span>
+            <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tasks" aria-label="Search tasks" />
+          </label>
         </div>
 
         {error && <div className="dashboard-error" role="alert">{error}</div>}
@@ -157,17 +186,25 @@ export default function UserDashboard() {
             <span /><span /><span />
           </div>
         )}
-        {!loading && !error && visibleTasks.length > 0 && (
-          <div className="dashboard-task-list">
-            {visibleTasks.map((task) => <TaskCard key={task.id} task={task} />)}
-          </div>
-        )}
-        {!loading && !error && visibleTasks.length === 0 && (
-          <div className="dashboard-empty">
-            <span className="empty-icon">✦</span>
-            <h3>{tasks.length === 0 ? 'A fresh start' : 'No matching tasks'}</h3>
-            <p>{tasks.length === 0 ? 'You don’t have any tasks yet. Create one to get started.' : 'Try a different search or status filter.'}</p>
-            {tasks.length === 0 && <Link to="/tasks/new">Create your first task <span aria-hidden="true">→</span></Link>}
+
+        {!loading && !error && (
+          <div className="jira-board" aria-label="Task board">
+            {columns.map((column) => (
+              <div key={column.key} className="jira-column">
+                <div className="jira-column-header">
+                  <h3>{column.label}</h3>
+                  <span>{column.tasks.length}</span>
+                </div>
+
+                <div className="jira-column-body">
+                  {column.tasks.length === 0 ? (
+                    <div className="jira-empty-column">No tasks</div>
+                  ) : (
+                    column.tasks.map((task) => <TaskCard key={task.id} task={task} />)
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </section>

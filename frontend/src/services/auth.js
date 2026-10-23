@@ -90,5 +90,14 @@ export async function signOut() {
   return true
 }
 
-
+export async function getUser() {
+  const current_user = await fetch('/api/current_user', {
+    credentials: 'include',
+    headers: {
+      Accept: 'application/json',
+    },
+  })
+  const data = await current_user.json()
+  return data
+}
 

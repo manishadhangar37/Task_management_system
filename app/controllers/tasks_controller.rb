@@ -32,13 +32,18 @@ class TasksController < ApplicationController
   def update
     @task = policy_scope(Task).find(params[:id])
     authorize @task
-    status = params.require(:task).permit(:status)[:status]
 
-    unless Task.statuses.key?(status)
+    permitted = params.require(:task).permit(:title, :description, :Assignee, :reporter, :status, :due_date, :priority)
+
+    if permitted[:status].present? && !Task.statuses.key?(permitted[:status].to_s)
       return render json: { errors: [ "Please choose a valid task status." ] }, status: :unprocessable_entity
     end
 
-    if @task.update(status: status)
+    if permitted[:priority].present? && !Task.priorities.key?(permitted[:priority].to_s)
+      return render json: { errors: [ "Please choose a valid task priority." ] }, status: :unprocessable_entity
+    end
+
+    if @task.update(permitted)
       render json: @task, status: :ok
     else
       render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
