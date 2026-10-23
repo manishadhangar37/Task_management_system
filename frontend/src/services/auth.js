@@ -54,16 +54,41 @@ export async function signIn({ email, password, remember }) {
   throw new Error('We couldn’t sign you in. Check your email and password, then try again.')
 }
 
+
+
 export async function signOut() {
-  const csrfToken = await getAuthCsrfToken()
-  const response = await fetch('/api/users/sign_out', {
+  // Get a fresh CSRF token from Rails
+  const tokenResponse = await fetch('/csrf_token', {
+    credentials: 'include',
+    headers: {
+      Accept: 'application/json',
+    },
+  })
+
+  if (!tokenResponse.ok) {
+    throw new Error('Could not fetch CSRF token')
+  }
+
+  const { csrf_token } = await tokenResponse.json()
+
+  console.log('CSRF token:', csrf_token)
+
+  // Destroy the Devise session
+  const response = await fetch('api/users/sign_out', {
     method: 'DELETE',
     credentials: 'include',
-    headers: { 'X-CSRF-Token': csrfToken, Accept: 'text/html' },
+    headers: {
+      Accept: 'application/json',
+      'X-CSRF-Token': csrf_token,
+    },
   })
-  
-  if (!response.ok && !response.redirected) {
-    throw new Error(`Sign-out failed (HTTP ${response.status}).`)
+
+  if (!response.ok) {
+    throw new Error(`Logout failed: ${response.status}`)
   }
+
+  return true
 }
+
+
 

@@ -12,6 +12,13 @@ export default defineConfig({
         changeOrigin: false,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
+      '/csrf_token': {
+        target: 'http://localhost:3000',
+        changeOrigin: false,
+      },
+      
+      
+      
     },
   },
 })

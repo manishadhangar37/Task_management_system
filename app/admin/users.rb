@@ -1,7 +1,8 @@
 
 ActiveAdmin.register User do
   permit_params :email, :role
-  
+
+actions :all, except: [ :new ]
   index do
     selectable_column
     id_column
@@ -9,19 +10,19 @@ ActiveAdmin.register User do
     column :created_at
     column :name
     column :role
-    
+
     actions
   end
-  
+
   filter :email
   filter :name
   filter :role
   filter :created_at
-  
- 
-  
-  #Edit form
-  
+
+
+
+  # Edit form
+
   show do
     attributes_table do
       row :id
@@ -32,7 +33,7 @@ ActiveAdmin.register User do
       row :updated_at
     end
   end
-  
+
   # Edit form: only role
   form do |f|
     f.inputs "Edit User Role" do
@@ -42,5 +43,3 @@ ActiveAdmin.register User do
     f.actions
   end
 end
-
-

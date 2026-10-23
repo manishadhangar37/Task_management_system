@@ -69,9 +69,10 @@ export async function getTasks() {
   })
   const result = await responseJson(response)
 
-  if (!response.ok) {
-    throw new Error(result.errors?.join(', ') || 'Unable to load your tasks. Please try again.')
-  }
+  if (response.status === 401) {
+  window.location.replace('/sign_in')
+  throw new Error('Please sign in to continue.')
+}
 
   return result
 }
