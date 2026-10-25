@@ -1,0 +1,233 @@
+
+
+.admin-dashboard,
+.admin-dashboard * {
+  box-sizing: border-box;
+}
+
+.admin-dashboard {
+  width: 100%;
+  max-width: none;
+  min-height: 100vh;
+  margin: 0;
+  background: #f5f7fb;
+  color: #253047;
+  font-family: Arial, Helvetica, sans-serif;
+}
+#root > .admin-dashboard {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Navbar */
+.admin-dashboard .admin-navbar {
+  width: 100%;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 16px 5%;
+  background: #ffffff;
+  border-bottom: 1px solid #e5eaf2;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.admin-dashboard .admin-navbar-brand {
+  flex-shrink: 0;
+  color: #253b80;
+  font-size: 20px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.admin-dashboard .admin-navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.admin-dashboard .admin-navbar-links a {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #526078;
+  text-decoration: none;
+  font-size: 14px;
+  white-space: nowrap;
+  transition: 0.2s ease;
+}
+
+.admin-dashboard .admin-navbar-links a:hover {
+  background: #f0f3ff;
+  color: #30469a;
+}
+
+.admin-dashboard .admin-navbar-links a.active {
+  background: #e9edff;
+  color: #30469a;
+  font-weight: 600;
+}
+
+.admin-dashboard .admin-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: #526078;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.admin-dashboard .admin-navbar-right button {
+  padding: 10px 17px;
+  border: none;
+  border-radius: 8px;
+  background: #30469a;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.admin-dashboard .admin-navbar-right button:hover {
+  background: #223575;
+}
+
+/* Dashboard heading */
+.admin-dashboard .admin-dashboard-heading {
+  width: 100%;
+  margin: 0;
+  padding: 35px 5%;
+  background: linear-gradient(135deg, #ffffff, #edf1ff);
+  border-bottom: 1px solid #e5eaf2;
+}
+
+.admin-dashboard .admin-dashboard-heading h1 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 34px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+/* Welcome section */
+.admin-dashboard .admin-dashboard-content {
+  width: 100%;
+  min-height: 350px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 40px 5%;
+  background: transparent;
+}
+
+.admin-dashboard .admin-welcome-box {
+  width: 100%;
+  max-width: 650px;
+  margin: 0;
+  padding: 28px 30px;
+  border: 1px solid #e3e8f2;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+  color: #526078;
+  font-size: 15px;
+  line-height: 1.8;
+  text-align: left;
+}
+
+.admin-dashboard .admin-welcome-box strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #253b80;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.admin-dashboard .admin-welcome-box p {
+  margin: 0;
+}
+
+/* Footer */
+.admin-dashboard .admin-dashboard-footer {
+  width: 100%;
+  margin: 0;
+  padding: 22px 5%;
+  border-top: 1px solid #e5eaf2;
+  background: #ffffff;
+  color: #7b879b;
+  font-size: 13px;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .admin-dashboard .admin-navbar {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 18px 24px;
+  }
+
+  .admin-dashboard .admin-navbar-links {
+    order: 3;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+  }
+
+  .admin-dashboard .admin-navbar-right {
+    margin-left: auto;
+  }
+
+  .admin-dashboard .admin-dashboard-heading,
+  .admin-dashboard .admin-dashboard-content,
+  .admin-dashboard .admin-dashboard-footer {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 520px) {
+  .admin-dashboard .admin-navbar-brand {
+    font-size: 17px;
+    white-space: normal;
+  }
+
+  .admin-dashboard .admin-navbar-right {
+    width: 100%;
+    justify-content: space-between;
+    margin-left: 0;
+    gap: 10px;
+    white-space: normal;
+  }
+
+  .admin-dashboard .admin-navbar-links {
+    gap: 2px;
+  }
+
+  .admin-dashboard .admin-navbar-links a {
+    padding: 9px;
+    font-size: 12px;
+  }
+
+  .admin-dashboard .admin-dashboard-heading {
+    padding-top: 28px;
+    padding-bottom: 28px;
+  }
+
+  .admin-dashboard .admin-dashboard-heading h1 {
+    font-size: 28px;
+  }
+
+  .admin-dashboard .admin-dashboard-content {
+    min-height: 300px;
+    padding-top: 24px;
+  }
+
+  .admin-dashboard .admin-welcome-box {
+    padding: 22px;
+  }
+}

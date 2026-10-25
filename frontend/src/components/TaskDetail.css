@@ -41,7 +41,7 @@
 .inline-edit-select {
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid #dde1ee;
+  border: 1px solid #edecf1;
   border-radius: 8px;
   background: #fff;
   color: #2d3247;
@@ -60,7 +60,7 @@
   margin-top: 18px;
   min-height: 180px;
   padding: 12px 14px;
-  resize: vertical;
+  
   color: #55596f;
   font-size: 13px;
   line-height: 1.7;
@@ -89,7 +89,7 @@
 
 .task-detail-columns {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  grid-template-columns: minmax(0, 8fr) minmax(0, .9fr);
   align-items: start;
   gap: 20px;
 }
@@ -105,8 +105,10 @@
 .task-detail-card {
   min-width: 0;
   margin-bottom: 16px;
+  position:sticky;
+  top:2px;
   padding: 22px 24px;
-  border: 1px solid #ececf2;
+  border: 1px solid #222292;
   border-radius: 13px;
   background: #fff;
   box-shadow: 0 7px 24px #252c4a08;
@@ -120,6 +122,11 @@
 .task-detail-right-column > .task-detail-card {
   margin-bottom: 0;
 }
+
+.task-detail-description-input {
+  overflow-y: hidden;
+}
+
 
 .detail-section-heading {
   display: flex;
@@ -411,4 +418,8 @@
   .detail-skeleton {
     animation: none;
   }
+}
+
+.title-descriptio{
+  border:2px solid red;
 }

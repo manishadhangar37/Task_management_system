@@ -1,24 +1,25 @@
+
 export async function getAuthCsrfToken() {
-  const pageToken = document.querySelector('meta[name="csrf-token"]')?.content
-  if (pageToken) return pageToken
-  
-  const response = await fetch('/api/users/sign_in', {
+  const response = await fetch('/csrf_token', {
+    method: 'GET',
     credentials: 'include',
-    headers: { Accept: 'text/html' },
-  })
-  const html = await response.text()
-  const documentFragment = new DOMParser().parseFromString(html, 'text/html')
-  const token = documentFragment.querySelector('meta[name="csrf-token"]')?.content
-  || documentFragment.querySelector('input[name="authenticity_token"]')?.value
-  
-  if (!token) {
-    throw new Error('Could not load the secure sign-in form. Check that Rails is running and try again.')
+    headers: {
+      Accept: 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Could not fetch CSRF token. Please try again.');
   }
-  
-  return token
+
+  const data = await response.json();
+
+  if (!data.csrf_token) {
+    throw new Error('CSRF token not found in response.');
+  }
+
+  return data.csrf_token;
 }
-
-
 
 export async function signIn({ email, password, remember }) {
   const csrfToken = await getAuthCsrfToken()
@@ -57,23 +58,8 @@ export async function signIn({ email, password, remember }) {
 
 
 export async function signOut() {
-  // Get a fresh CSRF token from Rails
-  const tokenResponse = await fetch('/csrf_token', {
-    credentials: 'include',
-    headers: {
-      Accept: 'application/json',
-    },
-  })
-
-  if (!tokenResponse.ok) {
-    throw new Error('Could not fetch CSRF token')
-  }
-
-  const { csrf_token } = await tokenResponse.json()
-
-  console.log('CSRF token:', csrf_token)
-
-  // Destroy the Devise session
+  const csrf_token = await getAuthCsrfToken()
+  
   const response = await fetch('api/users/sign_out', {
     method: 'DELETE',
     credentials: 'include',

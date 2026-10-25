@@ -38,7 +38,7 @@ function isOverdue(task) {
 function TaskCard({ task }) {
   const navigate = useNavigate()
   const status = task.status || 'todo'
-  const priority = (task.priority || 'medium').toLowerCase()
+  const priority = (task.priority || 'high').toLowerCase()
 
   return (
     <article className="jira-card">
@@ -141,7 +141,6 @@ export default function UserDashboard() {
           <h1>My tasks</h1>
           <p>See what’s on your plate and keep your work moving.</p>
         </div>
-        <Link className="dashboard-create-button" to="/tasks/new"><span aria-hidden="true">＋</span> New task</Link>
       </section>
 
       <section className="task-summary" aria-label="Task summary">

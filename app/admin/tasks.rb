@@ -3,9 +3,7 @@ ActiveAdmin.register Task do
                 :status, :due_date, :priority
   actions :all
 
-
-
-  index do
+index do
     selectable_column
     id_column
     column :title

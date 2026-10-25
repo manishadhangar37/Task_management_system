@@ -1,14 +1,16 @@
 
 ActiveAdmin.register User do
-  permit_params :name, :email, :role, :password, :password_confirmation
+  permit_params :email, :role , :name, :password,:password_confirmation
 
+actions :all, except: [ :new ]
   index do
     selectable_column
     id_column
     column :email
+    column :created_at
     column :name
     column :role
-    column :created_at
+
     actions
   end
 
@@ -16,6 +18,10 @@ ActiveAdmin.register User do
   filter :name
   filter :role
   filter :created_at
+
+
+
+  # Edit form
 
   show do
     attributes_table do
@@ -28,20 +34,13 @@ ActiveAdmin.register User do
     end
   end
 
+  # Edit form: only role
   form do |f|
-    f.inputs "User Details" do
-      f.input :name
+    f.inputs "Edit User Role" do
       f.input :email
-
-      f.input :role,
-              as: :select,
-              collection: User.roles.keys,
-              include_blank: false
-
-      f.input :password
-      f.input :password_confirmation
+      f.input :role, include_blank: true
+      f.input :name
     end
-
     f.actions
   end
 end

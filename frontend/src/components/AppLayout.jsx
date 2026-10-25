@@ -20,22 +20,21 @@ export default function AppLayout() {
     }
   }
   const [user, setUser] = useState(null)
-
+  
   useEffect(() => {
     async function fetchUser() {
       try {
         const data = await getUser()
         setUser(data.user ?? data)
-        console.log('Current user:', user)
-        console.log('Current role:', user?.role)
+        
       } catch (error) {
         console.error('Unable to fetch user:', error)
       }
     }
-
+    
     fetchUser()
   }, [])
-
+  
   
   return (
     <main className="app-shell">
@@ -48,31 +47,32 @@ export default function AppLayout() {
     <nav className="navigation" aria-label="Main navigation">
     <NavLink to="/users_dashboard"><span className="nav-icon">▦</span> My tasks</NavLink>
     
-    {user?.role !== 'developer' && (
-  <NavLink to="/tasks/new">
-    <span className="nav-icon">＋</span> Create task
-  </NavLink>
-)}
-             
-     <NavLink to="/tasks/assigned">Assigned Task</NavLink>
-    </nav>
-    <div className="sidebar-bottom">
-    <div className="avatar">TM</div>
-    <div><strong>Task manager</strong><span>Workspace</span></div>
-    <span className="more">···</span>
-    </div>
-    </aside>
-    
-    <section className="main-area">
-    <header className="topbar">
-    <div className="breadcrumb"><span>Tasks</span><span className="slash">/</span><strong>{pageLabel}</strong></div>
-    <div className="topbar-actions">
-    <button className="help-button" type="button" aria-label="Help">?</button>
-    <button className="logout-button" type="button" onClick={handleLogout}>Log out</button>
-    </div>
-    </header>
-    <Outlet />
-    </section>
-    </main>
-  )
-}
+    {user?.role &&
+      !['developer', 'tester',''].includes(user.role) && (
+        <NavLink to="/tasks/new">
+        <span className="nav-icon">＋</span> Create task
+        </NavLink>
+      )}
+      
+      <NavLink to="/tasks/assigned">Assigned Task</NavLink>
+      </nav>
+      <div className="sidebar-bottom">
+      <div className="avatar">TM</div>
+      <div><strong>Task manager</strong><span>Workspace</span></div>
+      <span className="more">···</span>
+      </div>
+      </aside>
+      
+      <section className="main-area">
+      <header className="topbar">
+      <div className="breadcrumb"><span>Tasks</span><span className="slash">/</span><strong>{pageLabel}</strong></div>
+      <div className="topbar-actions">
+      <button className="logout-button" type="button" onClick={handleLogout}>Log out</button>
+      </div>
+      </header>
+      <Outlet />
+      </section>
+      </main>
+    )
+  }
+  

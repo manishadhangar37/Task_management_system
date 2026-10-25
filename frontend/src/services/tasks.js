@@ -1,3 +1,4 @@
+import { getAuthCsrfToken } from './auth'
 async function responseJson(response) {
   const body = await response.text()
 
@@ -14,35 +15,10 @@ async function responseJson(response) {
   }
 }
 
-async function getCsrfToken() {
-  const pageToken = document.querySelector('meta[name="csrf-token"]')?.content
-  if (pageToken) return pageToken
 
-  const response = await fetch('/api/tasks', {
-    credentials: 'include',
-    headers: { Accept: 'text/html' },
-  })
-
-  if (response.url.includes('/users/sign_in')) {
-    throw new Error('Sign in to Rails before creating a task.')
-  }
-  if (!response.ok) {
-    throw new Error(
-      `Could not load a Rails security token (HTTP ${response.status}). Make sure Rails is running at localhost:3000 and you are signed in.`,
-    )
-  }
-
-  const html = await response.text()
-  const token = new DOMParser()
-    .parseFromString(html, 'text/html')
-    .querySelector('meta[name="csrf-token"]')?.content
-
-  if (!token) throw new Error('Rails did not provide a security token. Reload the page and try again.')
-  return token
-}
 
 export async function createTask(task) {
-  const csrfToken = await getCsrfToken()
+  const csrfToken = await getAuthCsrfToken()
   const response = await fetch('/api/tasks', {
     method: 'POST',
     credentials: 'include',
@@ -92,7 +68,7 @@ export async function getTask(id) {
 }
 
 export async function updateTask(id, payload) {
-  const csrfToken = await getCsrfToken()
+  const csrfToken = await getAuthCsrfToken()
   const response = await fetch(`/api/tasks/${id}`, {
     method: 'PATCH',
     credentials: 'include',
@@ -102,6 +78,7 @@ export async function updateTask(id, payload) {
       'X-CSRF-Token': csrfToken,
     },
     body: JSON.stringify({ task: payload }),
+    
   })
   const result = await responseJson(response)
 

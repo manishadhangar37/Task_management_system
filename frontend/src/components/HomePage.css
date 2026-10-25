@@ -1,0 +1,143 @@
+    
+        .home-page {
+          min-height: 100vh;
+          padding: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: "Segoe UI", Arial, sans-serif;
+          background: linear-gradient(135deg, #eef2ff, #f8faff, #e5edff);
+        }
+
+        .home-container {
+          width: 100%;
+          max-width: 1000px;
+          text-align: center;
+        }
+
+        .brand {
+          color: #dddfe7;
+          font-size: 15px;
+          font-weight: 700;
+         
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          margin-bottom: 18px;
+        }
+
+        .home-container h1 {
+          color: #172554;
+          font-size: clamp(32px, 5vw, 48px);
+          margin: 0 0 14px;
+          font-weight: 750;
+        }
+
+        .home-description {
+          color: #64748b;
+          font-size: 17px;
+          line-height: 1.7;
+          max-width: 600px;
+          margin: 0 auto 45px;
+        }
+
+        .login-options {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 26px;
+          text-align: left;
+        }
+
+        .login-card {
+          background: #ffffff;
+          padding: 35px;
+          border: 1px solid #e0e7f3;
+          border-radius: 20px;
+          box-shadow: 0 15px 40px rgba(37, 55, 100, 0.08);
+          transition: transform 0.25s, box-shadow 0.25s;
+        }
+
+        .login-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 22px 45px rgba(37, 55, 100, 0.14);
+        }
+
+        .option-icon {
+          width: 64px;
+          height: 64px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 17px;
+          background: #edf1ff;
+          font-size: 30px;
+          margin-bottom: 24px;
+        }
+
+        .login-card h2 {
+          color: #1e293b;
+          font-size: 24px;
+          margin: 0 0 12px;
+        }
+
+        .login-card p {
+          color: #64748b;
+          font-size: 15px;
+          line-height: 1.7;
+          min-height: 52px;
+          margin: 0 0 25px;
+        }
+
+        .login-button {
+          width: 100%;
+          padding: 14px 18px;
+          border: none;
+          border-radius: 10px;
+          background: #30469a;
+          color: white;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+
+        .login-button:hover {
+          background: #223575;
+        }
+
+        .user-card .option-icon {
+          background: #e6f7ef;
+        }
+
+        .user-card .login-button {
+          background: #12805c;
+        }
+
+        .user-card .login-button:hover {
+          background: #0c6548;
+        }
+
+        .home-footer {
+          margin-top: 40px;
+          color: #94a3b8;
+          font-size: 13px;
+        }
+
+        @media (max-width: 650px) {
+          .home-page {
+            padding: 25px 16px;
+          }
+
+          .login-options {
+            grid-template-columns: 1fr;
+          }
+
+          .login-card {
+            padding: 28px;
+          }
+
+          .home-description {
+            margin-bottom: 30px;
+          }
+        }
+    
+

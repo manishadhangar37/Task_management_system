@@ -1,94 +1,251 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import './TaskAssigned.css'
 
-function TaskAssigned() {
-    const [tasks, setTasks] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState('')
-    const navigate = useNavigate()
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './UserDashboard.css';
 
+const STATUS_COLUMNS = [
+    { key: 'todo', label: 'To Do' },
+    { key: 'inProgress', label: 'In Progress' },
+    { key: 'inReview', label: 'In Review' },
+    { key: 'done', label: 'Done' },
+];
+
+function normalizeStatus(status) {
+    if (!status) return 'todo';
     
-    useEffect(() => {
-        
-        const fetchAssignedTasks = async () => {
-            try {
-                const response = await fetch('/api/tasks/assigned', {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        Accept: 'application/json',
-                    },
-                })
-                console.log(response)
-                if (!response.ok) {
-                    throw new Error('Failed to fetch assigned tasks')
-                }
-                
-                const data = await response.json()
-                
-                setTasks(data)
-            } catch (err) {
-                setError(err.message)
-            } finally {
-                setLoading(false)
-            }
-        }
-        
-        fetchAssignedTasks()
-    }, [])
+    const normalized = String(status)
+    .toLowerCase()
+    .replace(/[\s_-]/g, '');
     
-    if (loading) {
-        return <p>Loading assigned tasks...</p>
-    }
+    const statusMap = {
+        todo: 'todo',
+        pending: 'todo',
+        inprogress: 'inProgress',
+        inreview: 'inReview',
+        review: 'inReview',
+        done: 'done',
+        completed: 'done',
+    };
     
-    if (error) {
-        return <p>Error: {error}</p>
-    }
+    return statusMap[normalized] || 'todo';
+}
+
+function getInitials(name) {
+    if (!name) return '?';
     
-    if (tasks.length === 0) {
-        return <p>No tasks assigned to you.</p>
-    }
+    return String(name)
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() || '')
+    .join('');
+}
+
+function TaskCard({ task }) {
+    const navigate = useNavigate();
+    const assignee =
+    task.Assignee ||
+    task.assignee ||
+    task.assignee_name ||
+    task.assignee?.name ||
+    'Unassigned';
+    
+    const priority = task.priority || 'Medium';
     
     return (
-        <div className="assigned-tasks">
-        <h2>My Assigned Tasks</h2>
+        <article className="jira-card">
+        <div className="jira-card-header">
+        <span className="jira-task-key">
+        {task.key || task.task_key || `TASK-${task.id}`}
+        </span>
         
-        {tasks.map((task) => (
-            <div className="task-card" key={task.id}>
-            <h3>{task.title}</h3>
+        
+        </div>
+        
+        <h4 className="jira-card-title">
+        {task.title || 'Untitled task'}
+        </h4>
+        
+        <div className="jira-card-meta">
+        <span className="assignee-info">
+        <strong>Assignee:</strong>
+        
+        {task.Assignee ? (
+            <span className="assignee-avatar-wrapper">
+            <span className="assignee-avatar">
+            {task.Assignee
+                .split('@')[0]
+                .slice(0, 2)
+                .toUpperCase()}
+                </span>
+                
+                <span className="assignee-email">
+                {task.Assignee}
+                </span>
+                </span>
+            ) : (
+                assignee === 'Unassigned'
+                ? 'Unassigned'
+                : typeof assignee === 'object'
+                ? assignee.name || assignee.email || 'Unassigned'
+                : assignee
+            )}
+            </span>
             
-            <p>{task.description}</p>
-            
-            <p>
-            <strong>Assignee:</strong> {task.Assignee}
-            </p>
-             <p>
-            <strong>Reporter:</strong> {task.reporter}
-            </p>
-            
-            <p>
-            <strong>Status:</strong> {task.status}
-            </p>
-            
-            <p>
-            <strong>Priority:</strong> {task.priority}
-            </p>
-            
-            <p>
-            <strong>Due Date:</strong>{' '}
-            {task.due_date
-                ? new Date(task.due_date).toLocaleDateString()
-                : 'No due date'}
-                </p>
-                <button onClick={() => navigate(`/tasks/${task.id}`)}>
-                View Task
-                </button>
-                </div>
-            ))}
+            {task.due_date && (
+                <span className="jira-due-date">
+                Due: {new Date(task.due_date).toLocaleDateString()}
+                </span>
+            )}
             </div>
-        )
+            <button type="button" className="jira-view-button" onClick={() => navigate(`/tasks/${task.id}`)}>
+            View task
+            </button>
+            </article>
+        );
     }
     
-    export default TaskAssigned
+    export default function AssignedTasks() {
+        const [tasks, setTasks] = useState([]);
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState('');
+        
+        useEffect(() => {
+            let active = true;
+            
+            async function fetchAssignedTasks() {
+                try {
+                    setLoading(true);
+                    setError('');
+                    
+                    const response = await fetch('/api/tasks/assigned', {
+                        method: 'GET',
+                        credentials: 'include',
+                        headers: {
+                            Accept: 'application/json',
+                        },
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(
+                            `Failed to load assigned tasks (${response.status})`
+                        );
+                    }
+                    
+                    const data = await response.json();
+                    
+                    const assignedTasks = Array.isArray(data)
+                    ? data
+                    : Array.isArray(data.tasks)
+                    ? data.tasks
+                    : [];
+                    
+                    if (active) {
+                        setTasks(assignedTasks);
+                    }
+                } catch (err) {
+                    if (active) {
+                        setError(
+                            err.message || 'Unable to load assigned tasks.'
+                        );
+                    }
+                } finally {
+                    if (active) {
+                        setLoading(false);
+                    }
+                }
+            }
+            
+            fetchAssignedTasks();
+            
+            return () => {
+                active = false;
+            };
+        }, []);
+        
+        if (loading) {
+            return (
+                <div className="assigned-tasks-page">
+                <h2>Assigned to Me</h2>
+                <p>Loading assigned tasks...</p>
+                </div>
+            );
+        }
+        
+        if (error) {
+            return (
+                <div className="assigned-tasks-page">
+                <h2>Assigned to Me</h2>
+                
+                <p role="alert" className="assigned-tasks-error">
+                {error}
+                </p>
+                
+                <button
+                type="button"
+                onClick={() => window.location.reload()}
+                >
+                Try Again
+                </button>
+                </div>
+            );
+        }
+        
+        return (
+            <div className="assigned-tasks-page">
+            <div className="assigned-tasks-header">
+            <div>
+            <h2>Assigned to Me</h2>
+            <p>Tasks assigned to you</p>
+            </div>
+            
+            <span className="assigned-tasks-count">
+            {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
+            </span>
+            </div>
+            
+            {tasks.length === 0 ? (
+                <div className="assigned-tasks-empty">
+                <h3>No assigned tasks</h3>
+                <p>Tasks assigned to you will appear here.</p>
+                </div>
+            ) : (
+                <div className="jira-board">
+                {STATUS_COLUMNS.map((column) => {
+                    const columnTasks = tasks.filter(
+                        (task) => normalizeStatus(task.status) === column.key
+                    );
+                    
+                    return (
+                        <section className="jira-column" key={column.key}>
+                        <div className="jira-column-header">
+                        <h3>{column.label}</h3>
+                        
+                        <span className="jira-column-count">
+                        {columnTasks.length}
+                        </span>
+                        </div>
+                        
+                        <div className="jira-column-content">
+                        {columnTasks.length > 0 ? (
+                            columnTasks.map((task) => (
+                                <TaskCard
+                                key={task.id}
+                                task={task}
+                                />
+                            ))
+                        ) : (
+                            <p className="jira-column-empty">
+                            No tasks
+                            </p>
+                        )}
+                        </div>
+                        </section>
+                    );
+                })}
+                </div>
+            )}
+            </div>
+        );
+    }
     
