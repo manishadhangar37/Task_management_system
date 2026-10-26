@@ -9,7 +9,7 @@ const emptyTask = {
   reporter: '',
   status: 'todo',
   due_date: '',
-  priority: 'medium',
+  priority: 'high',
 }
 
 export default function TaskForm() {
@@ -101,7 +101,7 @@ export default function TaskForm() {
 
         <label className="field">
           <span>Due date <b>*</b></span>
-          <input type="date" name="due_date" value={task.due_date} onChange={updateTask} required />
+          <input type="date" name="due_date" min={new Date().toLocaleDateString('en-CA')}value={task.due_date} onChange={updateTask} required />
         </label>
       </div>
 

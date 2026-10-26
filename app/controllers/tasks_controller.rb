@@ -4,10 +4,7 @@ class TasksController < ApplicationController
   def index
     @tasks = policy_scope(Task).order(due_date: :asc)
 
-    respond_to do |format|
-      format.html
-      format.json { render json: @tasks }
-    end
+    render json: @tasks
   end
 
   def create
@@ -44,7 +41,8 @@ class TasksController < ApplicationController
     end
 
     if @task.update(permitted)
-      render json: @task, status: :ok
+          TaskMailer.task_updated(@task).deliver_later
+          render json: @task, status: :ok
     else
       render json: { errors: @task.errors.full_messages }, status: :unprocessable_entity
     end

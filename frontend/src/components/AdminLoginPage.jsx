@@ -1,10 +1,15 @@
+
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { adminSignIn } from '../services/admin_auth'
+import './AdminLogin.css'
 
 export default function AdminLoginPage() {
   const navigate = useNavigate()
-  const [form, setForm] = useState({ email: 'admin@example.com', password: 'password' })
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+  })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -24,31 +29,46 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div style={{ maxWidth: 420, margin: '80px auto', padding: 24 }}>
-      <h2>Admin Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          placeholder="adminemail"
-          required
-        />
-        <br /><br />
-        <input
-          type="password"
-          
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
-          placeholder="Password"
-          required
-        />
-        <br /><br />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Signing in...' : 'Login as Admin'}
-        </button>
-      </form>
+    <div className="admin-login-page">
+      <div className="admin-login-card">
+        <h2 className="admin-login-title">Admin Login</h2>
 
-      {error && <p style={{ color: 'crimson', marginTop: 12 }}>{error}</p>}
+        <form className="admin-login-form" onSubmit={handleSubmit}>
+          <input
+            className="admin-login-input"
+            type="email"
+            value={form.email}
+            onChange={(e) =>
+              setForm({ ...form, email: e.target.value })
+            }
+            placeholder="Admin email"
+            required
+          />
+
+          <input
+            className="admin-login-input"
+            type="password"
+            value={form.password}
+            onChange={(e) =>
+              setForm({ ...form, password: e.target.value })
+            }
+            placeholder="Password"
+            required
+          />
+
+          <button
+            className="admin-login-button"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? 'Signing in...' : 'Login as Admin'}
+          </button>
+        </form>
+
+        {error && (
+          <p className="admin-login-error">{error}</p>
+        )}
+      </div>
     </div>
   )
 }

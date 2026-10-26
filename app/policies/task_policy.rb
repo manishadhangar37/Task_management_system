@@ -1,6 +1,5 @@
 
 class TaskPolicy < ApplicationPolicy
-  # Determines which tasks a user can see.
   class Scope < ApplicationPolicy::Scope
     def resolve
       case user.role

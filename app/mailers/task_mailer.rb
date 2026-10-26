@@ -15,4 +15,13 @@ class TaskMailer < ApplicationMailer
       subject: "Your Due date for #{task.title} is today"
     )
   end
+
+  def task_updated(task)
+    @task = task
+    mail(
+      to: task.Assignee,
+      from: task.reporter,
+      subject: "Task Updated: #{task.title}"
+    )
+  end
 end

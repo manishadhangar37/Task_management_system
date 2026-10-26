@@ -29,6 +29,7 @@ export default function SignUp() {
       });
       
       setMessage("Account created successfully!");
+      navigate("/users_dashboard");
     } catch (error) {
       setMessage(
         error.response?.data?.errors?.full_messages?.join(", ") ||
