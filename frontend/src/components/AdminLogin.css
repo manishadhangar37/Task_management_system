@@ -21,6 +21,33 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
+
+.password-field {
+  position: relative;
+  width: 100%;
+}
+
+.password-field .admin-login-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 60px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: #6962c8;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 5px;
+}
+
+
 .admin-login-title {
   margin: 0 0 24px;
   color: #20233a;

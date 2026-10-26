@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'Task inline updates', type: :request do
+    include Devise::Test::IntegrationHelpers
+
   let(:user) { create(:user, role: 'manager', email: 'manager@example.com') }
   let!(:task) { create(:task, user: user, reporter: user.email, Assignee: 'old.assignee@example.com', status: 'todo', priority: 'medium', due_date: 1.day.from_now) }
 

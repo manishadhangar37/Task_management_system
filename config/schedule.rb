@@ -19,6 +19,6 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 1.day, at: "10:30 am" do
+every 1.day, at: "11:46 am" do
     runner "TaskReminderJob.perform_now"
 end

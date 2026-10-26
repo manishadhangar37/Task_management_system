@@ -22,6 +22,7 @@ gem "activeadmin"
 gem "pundit"
 gem "dartsass-rails"
 gem "whenever"
+gem "sidekiq"
 
 group :development, :test do
   gem "rspec-rails"

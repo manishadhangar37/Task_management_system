@@ -44,7 +44,6 @@ export async function getTasks() {
     headers: { Accept: 'application/json' },
   })
   const result = await responseJson(response)
-
   if (response.status === 401) {
   window.location.replace('/sign_in')
   throw new Error('Please sign in to continue.')
@@ -92,3 +91,29 @@ export async function updateTask(id, payload) {
 export async function updateTaskStatus(id, status) {
   return updateTask(id, { status })
 }
+
+ export async function fetchAdminUsers() {
+    try {
+      const csrf_token = await getAuthCsrfToken()
+      const response = await fetch('/api/users', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          'X-CSRF-Token': csrf_token,
+        },
+      });
+       
+      if (!response.ok) {
+        throw new Error('Failed to load users.');
+      }
+
+      const data = await response.json();
+     return data
+      
+    } catch (err) {
+      console.error(err.message);
+    }
+        
+    
+  }
