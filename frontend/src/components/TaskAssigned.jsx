@@ -44,7 +44,7 @@ function getInitials(name) {
 function TaskCard({ task }) {
     const navigate = useNavigate();
     const assignee =
-    task.Assignee ||
+    task.assignee ||
     task.assignee ||
     task.assignee_name ||
     task.assignee?.name ||
@@ -70,17 +70,17 @@ function TaskCard({ task }) {
         <span className="assignee-info">
         <strong>Assignee:</strong>
         
-        {task.Assignee ? (
+        {task.assignee ? (
             <span className="assignee-avatar-wrapper">
             <span className="assignee-avatar">
-            {task.Assignee
+            {task.assignee
                 .split('@')[0]
                 .slice(0, 2)
                 .toUpperCase()}
                 </span>
                 
                 <span className="assignee-email">
-                {task.Assignee}
+                {task.assignee}
                 </span>
                 </span>
             ) : (

@@ -56,14 +56,14 @@ function TaskCard({ task }) {
   <span className="assignee-info">
     <strong>Assignee:</strong>
 
-    {task.Assignee ? (
+    {task.assignee ? (
       <span className="assignee-avatar-wrapper">
         <span className="assignee-avatar">
-          {task.Assignee.split('@')[0].slice(0, 2).toUpperCase()}
+          {task.assignee.split('@')[0].slice(0, 2).toUpperCase()}
         </span>
 
         <span className="assignee-email">
-          {task.Assignee}
+          {task.assignee}
         </span>
       </span>
     ) : (
@@ -120,7 +120,7 @@ export default function UserDashboard() {
     const query = search.trim().toLowerCase()
     return tasks.filter((task) => {
       if (!query) return true
-      return [task.title, task.description, task.Assignee]
+      return [task.title, task.description, task.assignee]
         .some((value) => value?.toLowerCase().includes(query))
     })
   }, [tasks, search])

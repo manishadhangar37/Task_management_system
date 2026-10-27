@@ -16,7 +16,7 @@ export default function AppLayout() {
     try {
       await signOut()
     } finally {
-      navigate('/users/sign_in', { replace: true })
+      navigate('/', { replace: true })
     }
   }
   const [user, setUser] = useState(null)

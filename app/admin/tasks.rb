@@ -1,5 +1,5 @@
 ActiveAdmin.register Task do
-   permit_params :title, :description, :Assignee, :reporter,
+   permit_params :title, :description, :assignee, :reporter,
                 :status, :due_date, :priority
   actions :all
 
@@ -11,7 +11,7 @@ index do
     column :due_date
     column :priority
     column :status
-    column :Assignee
+    column :assignee
     column :reporter
     actions
   end
@@ -22,7 +22,7 @@ index do
       row :description
       row :due_date
       row :status
-      row :Assignee
+      row :assignee
       row :reporter
       row :priority
     end
@@ -35,7 +35,7 @@ index do
       f.input :due_date
       f.input :status
       f.input :priority
-      f.input :Assignee
+      f.input :assignee
       f.input :reporter
     end
     f.actions

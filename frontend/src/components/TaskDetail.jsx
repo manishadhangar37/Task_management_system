@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getTask, updateTask } from '../services/tasks'
+import { fetchAdminUsers } from '../services/tasks'
 import './TaskDetail.css'
 
 const statusOptions = [
@@ -19,7 +20,7 @@ const priorityOptions = [
 const fieldLabels = {
   title: 'Title',
   description: 'Description',
-  Assignee: 'Assignee',
+  assignee: 'Assignee',
   status: 'Status',
   priority: 'Priority',
   due_date: 'Due date',
@@ -52,6 +53,28 @@ export default function TaskDetail() {
   const [savingField, setSavingField] = useState('')
   const [error, setError] = useState('')
   const [feedback, setFeedback] = useState('')
+  const [adminUsers, setAdminUsers] = useState([])
+  
+  useEffect(() => {
+    async function loadAdminUsers() {
+      try {
+        const data = await fetchAdminUsers()
+        console.log('data:', data)
+        
+        setAdminUsers(
+          Array.isArray(data)
+          ? data
+          : Array.isArray(data.admin_users)
+          ? data.admin_users
+          : []
+        )
+      } catch (error) {
+        console.error('Failed to fetch admin users:', error)
+      }
+    }
+    
+    loadAdminUsers()
+  }, [])
   
   useEffect(() => {
     let active = true
@@ -160,6 +183,7 @@ function handleDescriptionKeyDown(event) {
   }
 }
 
+
 function handleAssigneeKeyDown(event) {
   if (event.key === 'Enter') {
     event.preventDefault()
@@ -217,13 +241,13 @@ return (
     
     <div className="task-detail-columns">
     <div className="task-detail-left-column">
-      <div className="title-description">
+    <div className="title-description">
     <header className="task-detail-heading">
     <div className="eyebrow">
     <span className="eyebrow-dot" />
     TASK DETAILS <span className="task-id">#{task.id}</span>
     </div>
-  
+    
     <h2>Task: {task.title}</h2>
     
     
@@ -320,22 +344,36 @@ return (
     <div className="editable-field">
     <dt>Assignee</dt>
     <dd>
-    <input
-    className="inline-edit-input"
-    type="email"
+    
+    <select
+    className="inline-edit-select"
     value={editedAssignee}
-    onChange={(event) =>
-      setEditedAssignee(event.target.value)
-    }
-    onKeyDown={handleAssigneeKeyDown}
-    placeholder="Assignee email"
+    onChange={(event) => {
+      const email = event.target.value
+      handleInlineSave('Assignee', email)
+    }}
     aria-label="Task assignee"
     disabled={savingField === 'Assignee'}
-    />
-    </dd>
-    </div>
+    >
+    {editedAssignee && !adminUsers.some(
+      (user) => user.email === editedAssignee
+    ) && (
+      <option value={editedAssignee}>
+      {editedAssignee}
+      </option>
+    )}
     
-    <div>
+    
+    {adminUsers.map((user) => (
+      <option key={user.id} value={user.email}>
+      {user.email}
+      </option>
+    ))}
+    </select>
+    
+    
+    </dd>
+    
     <dt>Reporter</dt>
     <dd>{task.reporter || '—'}</dd>
     </div>
@@ -367,7 +405,7 @@ return (
     <input
     className="inline-edit-input"
     type="date"
-      min={new Date().toLocaleDateString('en-CA')}value={
+    min={new Date().toLocaleDateString('en-CA')}value={
       task.due_date
       ? task.due_date.slice(0, 10)
       : ''
@@ -389,7 +427,9 @@ return (
     </section>
     </div>
     </div>
-    </>
+    <button type="button" onClick={()=>handleDelete(task.id)} className="delete-task-button">
+    Delete Task
+    </button>    </>
   )}
   </div>
 )

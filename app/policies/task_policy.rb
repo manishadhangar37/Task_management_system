@@ -1,4 +1,3 @@
-
 class TaskPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
@@ -10,10 +9,10 @@ class TaskPolicy < ApplicationPolicy
       when "team_lead"
         developer_emails = User.where(role: %w[developer tester]).pluck(:email)
         manager_ids = User.where(role: "manager").select(:id)
-        scope.where(Assignee: developer_emails).or scope.where(Assignee: user.email)
+        scope.where(assignee: developer_emails).or scope.where(assignee: user.email)
 
       when "developer", "tester"
-        scope.where(Assignee: user.email)
+        scope.where(assignee: user.email)
       else
         scope.none
       end
@@ -34,10 +33,10 @@ class TaskPolicy < ApplicationPolicy
       record.user_id == user.id || User.where(email: record.reporter, role: "team_lead").exists?
 
     when "team_lead"
-      record.Assignee == user.email || User.where(email: record.Assignee, role: "developer").exists?
+      record.assignee == user.email || User.where(email: record.assignee, role: "developer").exists?
 
     when "developer", "tester"
-      record.Assignee == user.email
+      record.assignee == user.email
     end
   end
 

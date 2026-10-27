@@ -3,7 +3,7 @@ class TaskMailer < ApplicationMailer
     @task = task
 
     mail(
-    to: @task.Assignee,
+    to: @task.assignee,
     subject: "New Task for You #{@task.title}"
     )
   end
@@ -11,17 +11,17 @@ class TaskMailer < ApplicationMailer
   def due_date_reminder(task)
     @task = task
     mail(
-      to: task.Assignee,
-      subject: "Your Due date for #{task.title} is today"
+    to: task.assignee,
+    subject: "Your Due date for #{task.title} is today"
     )
   end
 
   def task_updated(task)
     @task = task
     mail(
-      to: task.Assignee,
-      from: task.reporter,
-      subject: "Task Updated: #{task.title}"
+    to: task.assignee,
+    from: task.reporter,
+    subject: "Task Updated: #{task.title}"
     )
   end
 end

@@ -12,6 +12,8 @@ export default function AdminLoginPage() {
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -44,10 +46,10 @@ export default function AdminLoginPage() {
             placeholder="Admin email"
             required
           />
-
+          <div className="password-field">
           <input
             className="admin-login-input"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             value={form.password}
             onChange={(e) =>
               setForm({ ...form, password: e.target.value })
@@ -55,6 +57,15 @@ export default function AdminLoginPage() {
             placeholder="Password"
             required
           />
+          <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword((shown) => !shown)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? 'Hide' : 'Show'}
+          </button>
+          </div>
 
           <button
             className="admin-login-button"

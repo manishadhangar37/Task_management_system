@@ -30,7 +30,7 @@ class TasksController < ApplicationController
     @task = policy_scope(Task).find(params[:id])
     authorize @task
 
-    permitted = params.require(:task).permit(:title, :description, :Assignee, :reporter, :status, :due_date, :priority)
+    permitted = params.require(:task).permit(:title, :description, :assignee, :reporter, :status, :due_date, :priority)
 
     if permitted[:status].present? && !Task.statuses.key?(permitted[:status].to_s)
       return render json: { errors: [ "Please choose a valid task status." ] }, status: :unprocessable_entity
@@ -51,6 +51,6 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:title, :description, :Assignee, :reporter, :status, :due_date, :priority)
+    params.require(:task).permit(:title, :description, :assignee, :reporter, :status, :due_date, :priority)
   end
 end

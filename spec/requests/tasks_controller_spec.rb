@@ -1,6 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Tasks API", type: :request do
+  include Devise::Test::IntegrationHelpers
   let(:user) { create(:user, role: :manager, email: "manager@example.com") }
   let!(:task) do
     create(
